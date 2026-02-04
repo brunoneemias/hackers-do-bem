@@ -53,7 +53,7 @@ Utilizou-se o comando:
 diff Texto.txt Texto_copia.txt
 ```
 📷 Evidência: 
-
+![diff](screenshots/atividade1_diff.pn)
 ---  
 
 ### 🖼️ Atividade 2 — Comparação de Arquivos Binários (Imagens)
@@ -63,7 +63,7 @@ Foram comparadas imagens idênticas e uma imagem alterada utilizando:
 cmp Imagem1.png Imagem2.png
 ```
 📷 Evidência:
-
+![cmp](screenshots/atividade2_cmp.pn)
 ---  
 
 ### 🔐 Atividade 3 — Verificação de Integridade com Hash MD5
@@ -73,7 +73,7 @@ Geração de hashes para validação dos arquivos:
 md5sum Imagem1.png Imagem1_copia.png Imagem2.png Texto.txt Texto_copia.txt
 ```
 📷 Evidência:
-
+![md5sum](screenshots/atividade3_md5.pn)
 ---   
 
 ### 🔒 Atividade 4 — Criptografia ROT13 e Cifra de César em Python
@@ -87,7 +87,7 @@ Script Python para Cifra de César:
 python3 cesar_cipher.py
 ```
 📷 Evidência: 
-
+![cifra](screenshots/atividade4_cifra.pn)
 ---    
 
 ### 📋 Atividade 5 — Gerenciamento de Tarefas com Taskwarrior
@@ -100,7 +100,7 @@ task 1 done
 ```
 
 📷 Evidência:
-
+![cifra](screenshots/atividade5_taskwarrior.pn)
 ---    
 
 ### 🎯 Principais Aprendizados
