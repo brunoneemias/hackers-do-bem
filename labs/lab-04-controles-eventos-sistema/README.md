@@ -54,7 +54,7 @@ Nesta atividade explorou-se a ferramenta CCrypt, utilizada para criptografar e d
 Foi utilizada a ferramenta Logcheck para analisar os eventos de sistema no Kali Linux, identificando e classificando mensagens de log relevantes. A capacidade de análise de logs é fundamental em ambientes de detecção e resposta a incidentes.
 
 📷 Print da atividade 2.7: Evidência da saída de eventos relevantes do sistema após análise com Logcheck.
-![](screenshots/atividade2_7_logcheck)
+![](screenshots/atividade2_7_logcheck.png)
 --- 
 
 ### 🧪 Atividade 2.8 — Exploração do Navegador Tor
@@ -62,7 +62,7 @@ Foi utilizada a ferramenta Logcheck para analisar os eventos de sistema no Kali 
 Esta atividade explorou o uso do navegador Tor para estabelecer conexão com a rede Tor, permitindo navegação anônima e reforçando conceitos de privacidade e anonimato na web.
 
 📷 Print da atividade 2.8: Evidência da conexão estabelecida com a rede Tor.
-![](screenshots/atividade2_8_tor_connect.png)
+![](screenshots/atividade2_8_tor_connect.png.bmp)
 --- 
 
 ### 🌐 Atividade 2.9 — Navegação na Deep Web com Tor
@@ -70,7 +70,7 @@ Esta atividade explorou o uso do navegador Tor para estabelecer conexão com a r
 Com o Tor configurado, realizou-se navegação em sites da Deep Web (extensão .onion), reforçando noções de anonimato, segurança e cuidados a serem tomados ao explorar redes que não são indexadas pelo tráfego comum da internet.
 
 📷 Print da atividade 2.9: Evidência de acesso a um site .onion via Tor.
-![](screenshots/atividade2_9_tor_navigation.png)
+![](screenshots/atividade2_9_tor_navigation.png.bmp)
 ---  
 
 ### 🔒 Atividade 2.10 — Políticas de Segurança no Windows Server 2022
@@ -84,7 +84,7 @@ Nesta atividade foi explorado o painel de Políticas Locais e de Conta no Window
 Essas políticas são controles gerenciais importantes para fortalecer a postura de segurança em sistemas corporativos.
 
 📷 Print da atividade 2.10: Evidência das configurações de políticas locais no Windows Server.
-![](screenshots/atividade2_10_windows_policies.png)
+![](screenshots/atividade2_10_windows_policies.png.bmp)
 ---  
 
 ### 🎯 Principais Aprendizados
