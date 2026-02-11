@@ -1,9 +1,9 @@
-# 🔍 Módulo 3 – Técnicas de Identificação de Ameaças
+0# 🔍 Módulo 3 – Técnicas de Identificação de Ameaças
 ## Aula 1 – Gerenciamento de Vulnerabilidades
 
 ---
 
-## 📋 Resumo Executivo
+## 📋 Resumo 
 
 Esta aula aborda as **técnicas e metodologias** para gerenciamento de vulnerabilidades em sistemas e redes. Compreender como realizar avaliações de segurança, interpretar resultados de varreduras e validar descobertas é essencial para manter uma postura defensiva robusta contra ameaças cibernéticas.
 
