@@ -30,20 +30,6 @@ Esta aula aborda as **técnicas de reconhecimento** e **testes de penetração**
 - Frameworks de teste de penetração
 - Ética e conformidade em testes de segurança
 
----
-
-## 🧭 Introdução
-
-Bem-vindos à aula sobre **"Scanner de vulnerabilidades: ativo x passivo"**. 
-
-Nesta aula, abordaremos conceitos relacionados à segurança da informação, focando em:
-- Reconhecimento ativo e passivo
-- Testes de penetração (pen test)
-- Ciclo de vida de um ataque de pen test
-
-Vamos entender a diferença entre as abordagens de reconhecimento, tão fundamental para identificar vulnerabilidades e riscos em sistemas e redes. Além disso, veremos testes de penetração, uma técnica muito utilizada para avaliar a segurança de um ambiente.
-
-Ao longo desta aula, você irá descobrir como os especialistas em segurança cibernética simulam ataques reais, identificam falhas de segurança e fornecem orientações para fortalecer a segurança de sistemas e redes.
 
 ---
 
