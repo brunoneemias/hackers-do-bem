@@ -794,7 +794,7 @@ Após implementar correções:
 
 ---
 
-**Autor:** [Seu Nome]  
+**Autor:** Bruno Neemias 
 **Data:** Fevereiro 2025  
 **Curso:** Fundamentos de Cibersegurança - Módulo 3 - Aula 1  
 **Fonte:** Material baseado em GitBook ESR-1 Fundamental Aula 05
