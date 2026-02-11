@@ -364,6 +364,6 @@ Nenhum controle único é suficiente. A combinação estratégica de controles p
 
 ---
 
-**Autor:** [Seu Nome]  
+**Autor:** Bruno Neemias 
 **Data:** Fevereiro 2025  
 **Curso:** Fundamentos de Cibersegurança - Módulo 2
