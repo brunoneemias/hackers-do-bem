@@ -3,7 +3,7 @@
 
 ---
 
-## 📋 Resumo Executivo
+## 📋 Resumo
 
 Esta aula aborda as **ferramentas essenciais de detecção e análise de rede** no contexto TCP/IP. Compreender como utilizar ferramentas de linha de comando, scanners de rede e analisadores de protocolo é fundamental para avaliar a segurança organizacional, identificar vulnerabilidades e detectar atividades suspeitas em redes corporativas.
 
@@ -28,20 +28,6 @@ Esta aula aborda as **ferramentas essenciais de detecção e análise de rede** 
 - Descoberta de serviços e portas
 - Análise de pacotes com Wireshark
 - Sniffers e analisadores de protocolo
-
----
-
-## 🧠 Introdução
-
-Bem-vindos à aula sobre **Análise de Tráfego TCP/IP**.
-
-Hoje abordaremos o tema da segurança organizacional, explorando ferramentas de **detecção de rede no contexto TCP/IP**.
-
-**Contexto atual:**
-No cenário atual, entender e proteger as redes torna-se **imperativo** e é exatamente isso que iremos tratar nas próximas seções.
-
-**Analogia:**
-A análise de tráfego é como um **raio-x para as redes**, permitindo-nos compreender e avaliar sua saúde e segurança.
 
 ---
 
@@ -1648,7 +1634,7 @@ nmap --script vuln 192.168.1.100 # Vulnerability scan
 
 ---
 
-**Autor:** [Seu Nome]  
+**Autor:** Bruno Neemias 
 **Data:** Fevereiro 2025  
 **Curso:** Fundamentos de Cibersegurança - Módulo 3 - Aula 4  
 **Fonte:** Material baseado em GitBook ESR-1 Fundamental Aula 06
