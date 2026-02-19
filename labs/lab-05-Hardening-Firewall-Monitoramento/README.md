@@ -1,6 +1,23 @@
 # 🛡️ Lab 05 — Módulo 3: Ferramentas de Segurança Ofensiva no Kali Linux
 
+> **Curso:** Fundamentos de Segurança da Informação — RNP/ESR  
+> **Módulo:** 3 — Aulas 1 e 2
 
+---
+
+## 📁 Estrutura do Repositório
+
+```
+lab05-ferramentas-seguranca-ofensiva/
+│
+├── README.md
+└── screenshots/
+    ├── atividade3_1_searchsploit_windows10.png
+    ├── atividade3_2_nmap_open_ports.png
+    ├── atividade3_3_burpsuite_http_history.png
+    ├── atividade3_4_netcat_request.png
+    └── atividade3_5_ncat_redirect.png
+```
 
 ---
 
