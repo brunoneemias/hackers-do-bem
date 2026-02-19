@@ -63,7 +63,8 @@ searchsploit openssh                 # Busca exploits do OpenSSH
 searchsploit -t windows 10           # Busca por título: Windows 10
 ```
 
-> 📸 **Print solicitado — Passo 7:** Terminal exibindo os resultados da busca `searchsploit -t windows 10` (primeiras 20 linhas)
+> 📸 Terminal exibindo os resultados da busca `searchsploit -t windows 10`
+![](screenshots/atividade3_1_searchsploit_windows10.pn)
 
 ---
 
@@ -83,16 +84,16 @@ O **Nmap** (Network Mapper) é uma das ferramentas de código aberto mais usadas
 ### Comandos principais
 ```bash
 ifconfig                                            # Visualiza interfaces de rede
-nmap -sn 192.168.98.0/24                           # Ping scan (hosts ativos)
-nmap -sn 192.168.98.0/24 | grep 192 | cut -d ' ' -f 5 > ips.txt  # Exporta IPs
-nmap -sA 192.168.98.0/24                           # Detecta firewalls (ACK scan)
-nmap --open 192.168.98.0/24                        # Lista portas abertas
-nmap --packet-trace 192.168.98.0/24                # Exibe pacotes enviados/recebidos
+nmap -sn "ip-da-interface"                          # Ping scan (hosts ativos)
+nmap -sn 192.168.0.1/24 | grep 192 | cut -d ' ' -f 5 > ips.txt  # Exporta IPs
+nmap -sA 192.168.0.1/24                           # Detecta firewalls (ACK scan)
+nmap --open 192.168.0.1/24                        # Lista portas abertas
+nmap --packet-trace 192.168.0.1/24                # Exibe pacotes enviados/recebidos
 rm ips.txt                                          # Remove arquivo temporário
 ```
 
-> 📸 **Print solicitado — Passo 6:** Terminal exibindo resultado do `nmap --open 192.168.98.0/24` com o estado de cada host e suas portas
-
+> 📸 Terminal exibindo resultado do `nmap --open 192.168.0.1/24` com o estado de cada host e suas portas
+![](screenshots/atividade3_2_nmap_open_ports.pn)
 ---
 
 ## 🔐 Atividade 3.3 — Interceptação com Burp Suite
@@ -119,8 +120,8 @@ Firefox → [Proxy 127.0.0.1:8080] → Burp Suite → Servidor web
                               Você analisa/modifica aqui
 ```
 
-> 📸 **Print solicitado — Passo 21:** Tela do Burp Suite na aba "HTTP history" exibindo as requisições interceptadas do Firefox
-
+> 📸 Tela do Burp Suite na aba "HTTP history" exibindo as requisições interceptadas do Firefox
+![](screenshots/atividade3_3_burpsuite_http_history.pn)
 ---
 
 ## 🎧 Atividade 3.4 — Escuta de requisições com Netcat
@@ -146,8 +147,8 @@ ifconfig                  # Descobre o IP da máquina
 nc -l -p 5555 -v          # Escuta na porta 5555 com verbose
 ```
 
-> 📸 **Print solicitado — Passo 6:** Terminal mostrando o Netcat capturando a requisição HTTP do Firefox com todos os headers
-
+> 📸 Terminal mostrando o Netcat capturando a requisição HTTP do Firefox com todos os headers
+![](screenshots/atividade3_4_netcat_request.pn)
 ---
 
 ## 🔄 Atividade 3.5 — Redirecionamento de tráfego com Ncat
@@ -180,8 +181,8 @@ ncat -v 127.0.0.1 443
 Terminal 2 (porta 80) ←→ [Ncat bridge] ←→ Terminal 3 (porta 443)
 ```
 
-> 📸 **Print solicitado — Passo 9:** Terminal 3 exibindo a mensagem "Teste B" recebida do Terminal 2, confirmando o redirecionamento bidirecional entre as portas
-
+> 📸 Terminal 3 exibindo a mensagem "Teste B" recebida do Terminal 2, confirmando o redirecionamento bidirecional entre as portas
+![](screenshots/atividade3_5_ncat_redirect.pn)
 ---
 
 ## 🛠️ Ferramentas utilizadas
