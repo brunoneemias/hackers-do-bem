@@ -291,4 +291,3 @@ A rotação de senhas está em debate na comunidade de segurança:
 
 ---
 
-> **Laboratório:** Módulo 05 – Aulas 3 e 4 | Fundamental 3ª Onda | HackersDoBem
