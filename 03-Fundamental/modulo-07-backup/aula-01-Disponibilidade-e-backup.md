@@ -1,207 +1,183 @@
-# 🔐 Segurança da Informação — Módulo 7: Disponibilidade e Backup
-
-> **Foco:** Redundância de armazenamento, replicação de dados e backup em nuvem
-
----
-
-## 📌 Conceitos Essenciais
-
-### 🛡️ Pilar da Disponibilidade (Availability)
-
-A **disponibilidade** é um dos três pilares da segurança da informação (CID — Confidencialidade, Integridade e **Disponibilidade**). Ela garante que dados e sistemas estejam acessíveis quando necessário. As práticas deste módulo têm como objetivo direto proteger esse pilar por meio de:
-
-- Redundância de armazenamento (RAID)
-- Replicação de dados (Rsync)
-- Backup em nuvem (OneDrive)
+# 🔁 Módulo 7, Aula 1: Redundância e Replicação
+> **Foco:** Redundância em redes, RAID, Rsync, replicação síncrona, assíncrona e em nuvem
 
 ---
 
-## 💾 RAID — Redundant Array of Independent Disks
+## 📌 Objetivos
 
-RAID é uma tecnologia que combina múltiplos discos físicos (ou partições) em uma única unidade lógica. Existem diferentes níveis com objetivos distintos.
+- Compreender os conceitos de redundância e replicação para garantir a resiliência e a recuperação de dados em caso de falhas ou desastres
 
-### RAID 0 — Striping (Desempenho)
+---
 
-| Característica | Detalhe |
+## 1. 🛡️ Redundância
+
+Redundância é o princípio de **duplicar componentes ou sistemas** para evitar perda de dados ou interrupções no serviço. É um dos pilares da **disponibilidade** — um dos três atributos fundamentais da segurança da informação (CID).
+
+### Benefícios da Redundância
+
+| Benefício | Descrição |
 |---|---|
-| **Objetivo** | Aumentar velocidade de leitura/escrita |
-| **Funcionamento** | Dados são divididos (*striped*) entre os discos em paralelo |
-| **Tolerância a falhas** | ❌ Nenhuma — se um disco falhar, todos os dados são perdidos |
-| **Espaço total** | Soma dos discos (2 × 100M = ~196M utilizáveis) |
-| **Uso típico** | Ambientes de alto desempenho onde perda de dados é aceitável |
+| **Disponibilidade Contínua** | Se um componente falhar, outro assume automaticamente sem interromper o serviço |
+| **Tolerância a Falhas** | Reduz a probabilidade de perda de dados ou interrupções — a carga é redistribuída entre os componentes restantes |
+| **Recuperação Rápida** | O **failover** transfere automaticamente o tráfego de um componente falho para um redundante via balanceador de carga |
+| **Proteção contra Desastres** | Backups em locais geograficamente separados protegem dados contra incêndios, inundações e outros desastres |
+| **Escalabilidade** | Novos componentes redundantes podem ser adicionados conforme a demanda cresce |
 
-**Implementação no Linux (mdadm):**
-```bash
-# Criar array RAID 0 com 2 partições
-mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/nvme1n1p1 /dev/nvme1n1p2
+### Exemplo Prático — Cluster de Servidores Web
 
-# Formatar e montar
-mkfs.ext4 /dev/md0
-mkdir /mnt/raid0
-mount /dev/md0 /mnt/raid0
-
-# Verificar
-df -h
+```
+[Usuários] → [Balanceador de Carga]
+                      ↓
+        ┌─────────────┼─────────────┐
+   [Servidor 1]  [Servidor 2]  [Servidor N]
 ```
 
-> ⚠️ **Atenção de segurança:** RAID 0 **não é** backup. A perda de qualquer disco destrói todos os dados.
+- Se um servidor falhar, o balanceador de carga redireciona o tráfego para os demais
+- Permite manutenção programada sem downtime — um servidor é retirado enquanto os outros atendem
+
+### Redundância Geográfica
+
+Backups replicados em **dois locais fisicamente separados** (ex: data center local + nuvem em outra cidade), garantindo recuperação mesmo em caso de desastre catastrófico no local principal.
 
 ---
 
-### RAID 1 — Mirroring (Redundância)
+## 2. 💽 RAID — Redundant Array of Independent Disks
 
-| Característica | Detalhe |
-|---|---|
-| **Objetivo** | Tolerância a falhas por espelhamento |
-| **Funcionamento** | Dados são escritos simultaneamente em dois discos |
-| **Tolerância a falhas** | ✅ Sim — se um disco falhar, o outro mantém os dados intactos |
-| **Espaço total** | Igual ao menor disco (100M → ~88M utilizáveis) |
-| **Uso típico** | Ambientes críticos onde a perda de dados é inaceitável |
+Tecnologia que combina múltiplos discos rígidos para melhorar **desempenho, capacidade e confiabilidade** do armazenamento.
 
-**Implementação no Linux (mdadm):**
-```bash
-# Criar array RAID 1 com 2 partições
-mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/nvme1n1p3 /dev/nvme1n1p4
+### Implementação
 
-# Verificar status de todos os arrays
-cat /proc/mdstat
+| Tipo | Descrição | Prós | Contras |
+|---|---|---|---|
+| **Via Software** | Gerenciado pelo SO ou software dedicado | Mais barato, portável entre sistemas | Usa CPU do sistema; menor desempenho |
+| **Via Hardware** | Controladora RAID dedicada (placa PCI-e) | Alto desempenho, processador próprio, cache dedicado | Mais caro; pode ter suporte limitado a SOs |
 
-# Formatar e montar
-mkfs.ext4 /dev/md1
-mkdir /mnt/raid1
-mount /dev/md1 /mnt/raid1
-```
+### Níveis de RAID
 
-> ✅ **Boa prática:** RAID 1 é ideal para aumentar a resiliência de dados críticos em servidores.
-
----
-
-## 🔄 Rsync — Replicação de Dados
-
-O `rsync` é uma ferramenta poderosa para sincronização eficiente de arquivos e diretórios, transferindo apenas as diferenças entre origem e destino.
-
-### Flags principais
-
-| Flag | Significado |
-|---|---|
-| `-a` | Modo arquivo: preserva permissões, timestamps, links simbólicos e replica recursivamente |
-| `-v` | Verbose: exibe detalhes da operação |
-| `-z` | Compressão durante a transferência (útil em redes lentas) |
-
-### Replicação manual
-
-```bash
-# Copiar arquivo específico de PastaA para PastaB
-rsync -avz /home/aluno/Documentos/PastaA/Teste.txt /home/aluno/Documentos/PastaB
-
-# Sincronizar diretório completo
-rsync -avz /home/aluno/Documentos/PastaA/ /home/aluno/Documentos/PastaB/
-```
-
-### Replicação automática com Cron
-
-O `cron` é o agendador de tarefas nativo do Linux. Permite executar scripts em intervalos definidos.
-
-**1. Criar o script de sincronização:**
-```bash
-nano /home/aluno/Documentos/sync_script.sh
-```
-
-```bash
-#!/bin/bash
-rsync -avz /home/aluno/Documentos/PastaA/ /home/aluno/Documentos/PastaB/
-```
-
-**2. Tornar o script executável:**
-```bash
-chmod +x sync_script.sh
-```
-
-**3. Agendar execução a cada minuto com crontab:**
-```bash
-crontab -e
-```
-```
-* * * * * /home/aluno/Documentos/sync_script.sh
-```
-
-> 💡 **Sintaxe do cron:** `minuto hora dia mês dia-da-semana comando`  
-> Referência: https://cron.help/
-
----
-
-## ☁️ Backup em Nuvem — OneDrive (Windows Server)
-
-A **replicação síncrona em nuvem** garante que arquivos locais sejam automaticamente espelhados em um servidor remoto, protegendo contra perda por falha de hardware local.
-
-### Conceito: Replicação Síncrona vs. Backup Tradicional
-
-| | Replicação Síncrona | Backup Tradicional |
-|---|---|---|
-| **Frequência** | Contínua (em tempo real) | Agendada (diária, semanal) |
-| **Velocidade de recuperação** | Imediata | Depende do agendamento |
-| **Proteção contra ransomware** | Menor (arquivos corrompidos são sincronizados) | Maior (versões anteriores preservadas) |
-
-### Configuração do OneDrive no Windows Server 2022
-
-1. Instalar o **OneDriveSetup**
-2. Adicionar `https://odc.officeapps.live.com` aos **Trusted Sites** (Internet Options > Security)
-3. Autenticar com conta Microsoft
-4. Selecionar pastas para backup automático (ex.: Desktop)
-5. Sincronização ocorre em tempo real após configuração
-
----
-
-## 🗂️ Estrutura de Partições Linux (Referência)
-
-| Partição | Descrição |
-|---|---|
-| `/dev/nvme0n1p1` | Sistema de arquivos principal (Kali Linux) |
-| `/dev/nvme0n1p14` | BIOS boot — bootloader GRUB2 (3 MiB) |
-| `/dev/nvme0n1p15` | EFI System — boot UEFI (124 MiB) |
-| `/dev/nvme1n1` | Disco secundário para laboratório (2 GiB) |
-| `/dev/md0` | Array RAID 0 criado (196 MiB) |
-| `/dev/md1` | Array RAID 1 criado (88 MiB utilizáveis) |
-
-**Tabelas de partição:**
-- **MBR (DOS):** Legado, máximo 4 partições primárias, discos até 2 TB
-- **GPT:** Moderno, necessário para UEFI, suporta mais partições e discos maiores que 2 TB
-
----
-
-## 🧰 Ferramentas Utilizadas
-
-| Ferramenta | Função |
-|---|---|
-| `fdisk` | Gerenciamento de partições em disco |
-| `partprobe` | Atualiza o kernel com nova tabela de partições |
-| `mdadm` | Criação e gerenciamento de arrays RAID via software |
-| `mkfs.ext4` | Formata partição com sistema de arquivos ext4 |
-| `mount` | Monta dispositivos em pontos do sistema de arquivos |
-| `df -h` | Exibe uso de espaço em disco de forma legível |
-| `rsync` | Sincronização eficiente de arquivos e diretórios |
-| `crontab` | Agendador de tarefas do Linux |
-| `cat /proc/mdstat` | Exibe status dos arrays RAID ativos |
-
----
-
-## 📊 Comparativo: Estratégias de Proteção de Dados
-
-| Estratégia | Proteção | Desempenho | Complexidade | Custo |
+| Nível | Nome | Como Funciona | Tolerância a Falhas | Capacidade Efetiva |
 |---|---|---|---|---|
-| **RAID 0** | ❌ Nenhuma | ⬆️ Alto | Baixa | Baixo |
-| **RAID 1** | ✅ Alta | Normal | Baixa | Médio (2x disco) |
-| **Rsync + Cron** | ✅ Alta | Normal | Média | Baixo |
-| **Backup em Nuvem** | ✅ Alta | Depende da rede | Baixa | Variável |
+| **RAID 0** | Striping | Dados divididos igualmente entre os discos em paralelo | ❌ Nenhuma — 1 disco falho = todos os dados perdidos | 100% dos discos |
+| **RAID 1** | Espelhamento | Cópia idêntica em 2+ discos simultaneamente | ✅ Alta — 1 disco falho, dados no espelho | 50% dos discos |
+| **RAID 5** | Striping com paridade | Dados + paridade distribuídos em 3+ discos | ✅ Tolera falha de 1 disco (reconstrução pela paridade) | N-1 discos |
+| **RAID 6** | Striping com paridade dupla | Paridade dupla em 4+ discos | ✅ Tolera falha de 2 discos simultâneos | N-2 discos |
+| **RAID 10 (1+0)** | Espelhamento + Striping | RAID 1 aplicado sobre RAID 0 | ✅ Alta — combina redundância e desempenho | 50% dos discos |
+| **RAID 01 (0+1)** | Striping + Espelhamento | RAID 0 espelhado em RAID 1 | ✅ Alta — semelhante ao RAID 10 | 50% dos discos |
+
+> 💡 **Quando usar cada nível:**
+> - **RAID 0:** máximo desempenho, sem necessidade de redundância (ex: edição de vídeo temporária)
+> - **RAID 1:** simplicidade e alta confiabilidade (ex: servidor de arquivos pequeno)
+> - **RAID 5:** equilíbrio entre desempenho, capacidade e redundância (uso geral)
+> - **RAID 6:** ambientes críticos que não toleram perda de dados (ex: banco de dados)
+> - **RAID 10:** alto desempenho + alta confiabilidade (ex: servidores de banco de dados transacionais)
 
 ---
 
-## ⚠️ Boas Práticas de Segurança
+## 3. 🔄 Rsync — Remote Synchronization
 
-- **RAID não substitui backup** — RAID protege contra falha de hardware, não contra exclusão acidental, ransomware ou desastres.
-- **Regra 3-2-1:** Mantenha 3 cópias dos dados, em 2 mídias diferentes, com 1 cópia offsite (nuvem).
-- **Teste seus backups** — Um backup nunca testado pode ser inútil na hora da recuperação.
-- **Automatize a replicação** — Processos manuais são sujeitos a falha humana; use cron ou ferramentas de backup.
-- **Privilégio mínimo** — Use `sudo` apenas quando necessário e não opere como root por padrão.
+Protocolo e ferramenta para **sincronização eficiente de dados em rede**, transferindo apenas as partes modificadas dos arquivos (delta transfer).
+
+### Como Funciona
+
+```
+[Origem]                          [Destino]
+   │                                  │
+   ├── Compara atributos (tamanho,     │
+   │   timestamp, checksum por bloco) │
+   │                                  │
+   ├── Identifica blocos modificados ──┤
+   │                                  │
+   └── Transfere APENAS os deltas ────→ Reconstrói arquivo atualizado
+```
+
+### Etapas do Processo
+
+1. **Comparação:** compara atributos e gera checksums de blocos em ambos os lados
+2. **Transferência delta:** envia apenas os blocos modificados ou ausentes — economiza largura de banda
+3. **Reconstrução:** o destino aplica as mudanças, adiciona novos blocos e descarta os obsoletos
+
+> ✅ **Ideal para:** sincronização de grandes arquivos em redes lentas, backups incrementais e replicação de diretórios
+
+---
+
+## 4. 🔃 Tipos de Replicação
+
+### Replicação Síncrona
+
+Os dados são replicados **em tempo real** — a gravação só é considerada concluída após confirmação do destino.
+
+```
+[Sistema Origem] ──gravar──→ [Confirma réplica no destino] ──→ Operação concluída
+```
+
+| Característica | Detalhe |
+|---|---|
+| **Consistência** | ✅ Total — dados sempre sincronizados |
+| **Desempenho** | ⚠️ Pode impactar — aguarda confirmação antes de concluir |
+| **Ideal para** | Bancos de dados transacionais críticos |
+| **Exemplo** | Oracle Data Guard |
+
+---
+
+### Replicação Assíncrona
+
+Os dados são replicados em **intervalos de tempo definidos**, sem aguardar confirmação do destino.
+
+```
+[Sistema Origem] ──gravar──→ Operação concluída imediatamente
+                                      ↓ (depois, em intervalo definido)
+                              [Réplica no destino]
+```
+
+| Característica | Detalhe |
+|---|---|
+| **Consistência** | ⚠️ Pequeno atraso aceitável (lag) |
+| **Desempenho** | ✅ Melhor — não bloqueia a operação |
+| **Ideal para** | Recuperação de desastres, replicação entre locais distantes |
+| **Exemplo** | Azure Blob Geo-Replication |
+
+---
+
+### Replicação em Nuvem
+
+Criação de cópias de dados em **diferentes servidores ou data centers na nuvem**, garantindo disponibilidade, durabilidade e escalabilidade.
+
+| Método | Descrição | Exemplos |
+|---|---|---|
+| **Síncrona em nuvem** | Dados replicados em tempo real entre regiões | Amazon S3 Replication, Google Cloud Cross-Region Replication |
+| **Assíncrona em nuvem** | Replicação em intervalos definidos com pequeno atraso | Azure Blob Geo-Replication, Google Cloud Object Versioning |
+| **Híbrida em nuvem** | Combinação: síncrona para dados críticos + assíncrona para dados menos sensíveis | Configurável nos principais provedores (AWS, Azure, GCP) |
+
+---
+
+## 📊 Comparativo — Tipos de Replicação
+
+| Critério | Síncrona | Assíncrona | Em Nuvem |
+|---|---|---|---|
+| **Latência** | Alta (aguarda confirmação) | Baixa (não bloqueia) | Variável |
+| **Consistência** | Total | Eventual (pequeno lag) | Depende do método |
+| **Desempenho** | Pode ser impactado | Melhor | Escalável |
+| **Ideal para** | Dados críticos/transacionais | Recuperação de desastres | Alta disponibilidade global |
+| **Custo** | Maior (infraestrutura local) | Menor | Pay-as-you-go |
+
+---
+
+## 📊 Resumo dos Tópicos — Aula 1
+
+| Tópico | Conceito-chave | Ponto Essencial |
+|---|---|---|
+| **Redundância** | Duplicar componentes para garantir disponibilidade | Failover, balanceamento de carga, redundância geográfica |
+| **RAID 0** | Striping — desempenho máximo | Sem tolerância a falhas |
+| **RAID 1** | Espelhamento — alta confiabilidade | Metade da capacidade usada |
+| **RAID 5** | Striping com paridade — equilíbrio | Tolera 1 disco falho |
+| **RAID 6** | Paridade dupla — máxima segurança | Tolera 2 discos falhos simultâneos |
+| **RAID 10** | Espelhamento + Striping | Desempenho + redundância combinados |
+| **Rsync** | Sincronização incremental via delta transfer | Economiza banda — transfere só o que mudou |
+| **Replicação Síncrona** | Tempo real com confirmação | Consistência total, pode impactar desempenho |
+| **Replicação Assíncrona** | Intervalo definido sem confirmação | Melhor desempenho, pequeno atraso aceitável |
+| **Replicação em Nuvem** | Cópias distribuídas em data centers na nuvem | Escalabilidade e disponibilidade global |
+
+---
+
+> ⚠️ **Lembre-se:** RAID **não é backup**. RAID protege contra falha de hardware, mas não contra exclusão acidental, ransomware ou desastres. Combine RAID com uma estratégia de backup robusta (regra 3-2-1).
 
 ---
